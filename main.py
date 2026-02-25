@@ -86,7 +86,12 @@ class AlterationNotifierPlugin(Star):
             plugin = metadata.name
             for check in all_commands:
                 if plugin == check["plugin"]:
-                    names |= AlterationNotifierPlugin.collect_command_names(check)
+                    added = AlterationNotifierPlugin.collect_command_names(check)
+                    names |= added
+                    cache = self.unloaded_cache.keys()
+                    for one in added:
+                        if one in cache:
+                            del self.unloaded_cache[one]
             self.activated_plugins[plugin] = names
 
             if not self.monitor_self and plugin == self.SELF:
