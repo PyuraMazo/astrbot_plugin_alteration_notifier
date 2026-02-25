@@ -1,6 +1,6 @@
 # 插件变更提醒
 
-[AstrBot](https://github.com/AstrBotDevs/AstrBot) 插件 —— 在插件被卸载或禁用时通知群聊。
+[AstrBot](https://github.com/AstrBotDevs/AstrBot) 插件 —— 在插件存在变动时通知群聊。
 
 ## 功能
 
