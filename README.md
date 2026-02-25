@@ -1,14 +1,18 @@
-# astrbot-plugin-helloworld
+# 插件变更提醒
 
-AstrBot 插件模板 / A template plugin for AstrBot plugin feature
+[AstrBot](https://github.com/AstrBotDevs/AstrBot) 插件 —— 在插件被卸载或禁用时通知群聊。
 
-> [!NOTE]
-> This repo is just a template of [AstrBot](https://github.com/AstrBotDevs/AstrBot) Plugin.
-> 
-> [AstrBot](https://github.com/AstrBotDevs/AstrBot) is an agentic assistant for both personal and group conversations. It can be deployed across dozens of mainstream instant messaging platforms, including QQ, Telegram, Feishu, DingTalk, Slack, LINE, Discord, Matrix, etc. In addition, it provides a reliable and extensible conversational AI infrastructure for individuals, developers, and teams. Whether you need a personal AI companion, an intelligent customer support agent, an automation assistant, or an enterprise knowledge base, AstrBot enables you to quickly build AI applications directly within your existing messaging workflows.
+## 功能
 
-# Supports
+- 监控插件的加载/卸载状态
+- 当插件被移除时，自动记录该插件的所有命令
+- 当用户尝试使用已移除的命令时，提示该命令已被移除及移除时间
 
-- [AstrBot Repo](https://github.com/AstrBotDevs/AstrBot)
-- [AstrBot Plugin Development Docs (Chinese)](https://docs.astrbot.app/dev/star/plugin-new.html)
-- [AstrBot Plugin Development Docs (English)](https://docs.astrbot.app/en/dev/star/plugin-new.html)
+## 使用场景
+
+再也不用看到用户输入一串指令但机器人没有响应的尴尬局面！
+
+## 要求
+
+- AstrBot >= 4.18.2
+

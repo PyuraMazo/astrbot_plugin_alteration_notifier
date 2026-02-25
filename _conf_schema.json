@@ -1,0 +1,26 @@
+{
+  "role_range": {
+    "description": "群聊作用域",
+    "type": "object",
+    "items": {
+      "exclude_mode": {
+        "description": "排除模式",
+        "hint": "启用后，将默认收集并对所有群聊生效，除了【群聊列表】配置的群聊以外；关闭后，将只对【群聊列表】配置的群聊生效。",
+        "type": "bool",
+        "default": true
+      },
+      "group_list": {
+        "description": "群聊列表",
+        "hint": "群聊的ID，效果将由【排除模式】配置是否开启决定。",
+        "type": "list",
+        "default": []
+      }
+    }
+  },
+  "monitor_self": {
+    "description": "监控本插件",
+    "hint": "启用后，本插件的加载（在【排除模式】配置关闭时）和卸载也会提醒。",
+    "type": "bool",
+    "default": false
+  }
+}
