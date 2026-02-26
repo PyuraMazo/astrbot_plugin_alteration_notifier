@@ -19,7 +19,7 @@
   },
   "monitor_self": {
     "description": "监控本插件",
-    "hint": "启用后，本插件的加载（在【排除模式】配置关闭时）和卸载也会提醒。",
+    "hint": "启用后，本插件的加载和卸载也会提醒。",
     "type": "bool",
     "default": false
   }
