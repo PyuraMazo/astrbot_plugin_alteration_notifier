@@ -63,13 +63,11 @@ class AlterationNotifierPlugin(Star):
                         names |= AlterationNotifierPlugin.collect_command_names(check)
                 self.activated_plugins[cmd.name] = names
 
-
     async def notify(self, msg: str):
         for group in self.role_range:
             await self.ctx.send_message(
                 self.UNIFIED_MSG_ORIGIN_PREFIX + group, MessageChain().message(msg)
             )
-
 
     @filter.on_plugin_loaded()
     async def plugin_loaded(self, metadata: StarMetadata):
@@ -115,7 +113,6 @@ class AlterationNotifierPlugin(Star):
             return
 
         pure_text = event.message_str
-        print(pure_text)
         for name in self.unloaded_cache:
             if pure_text.startswith(name):
                 yield event.plain_result(
