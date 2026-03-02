@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from astrbot.api import AstrBotConfig
@@ -64,10 +65,11 @@ class AlterationNotifierPlugin(Star):
                 self.activated_plugins[cmd.name] = names
 
     async def notify(self, msg: str):
-        for group in self.role_range:
-            await self.ctx.send_message(
-                self.UNIFIED_MSG_ORIGIN_PREFIX + group, MessageChain().message(msg)
-            )
+        res = [self.ctx.send_message(
+                f'{self.UNIFIED_MSG_ORIGIN_PREFIX}{group}', MessageChain().message(msg)
+            ) for group in self.role_range]
+        await asyncio.gather(*res)
+
 
     @filter.on_plugin_loaded()
     async def plugin_loaded(self, metadata: StarMetadata):
