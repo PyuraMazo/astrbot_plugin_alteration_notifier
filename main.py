@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
 
-from astrbot.api import AstrBotConfig
+from astrbot.api import AstrBotConfig, logger
 from astrbot.api.event import AstrMessageEvent, MessageChain, filter
 from astrbot.api.star import Context, Star
 from astrbot.core.star import StarMetadata, command_management
@@ -10,21 +10,21 @@ from astrbot.core.star import StarMetadata, command_management
 class AlterationNotifierPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
-        self.UNIFIED_MSG_ORIGIN_PREFIX = "default:GroupMessage:"
         self.SELF = "astrbot_plugin_alteration_notifier"
 
         self.ctx = context
 
-        self.exclude_mode = config.get("role_range", {}).get("exclude_mode", True)
-        self.group = config.get("role_range", {}).get("group_list", [])
-        self.monitor_self = config.get("monitor_self", False)
+        self.exclude_mode: bool = config.get("role_range", {}).get("exclude_mode", True)
+        self.group: list[str] = config.get("role_range", {}).get("group_list", [])
+        self.monitor_self: bool = config.get("monitor_self", False)
 
         self.activated_plugins: dict[str, set[str]] = {}
         self.unloaded_cache: dict[str, int] = {}
-        self.role_range: set[str] = set() if self.exclude_mode else set(self.group)
+        self.role_range: set[str] = set()
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
+        self.validate_group()
         await self.save_external_activated_plugins()
 
     async def terminate(self):
@@ -50,6 +50,18 @@ class AlterationNotifierPlugin(Star):
 
         return names
 
+    def validate_group(self):
+        validated = []
+        for i in self.group:
+            if " " in i:
+                bot, group = i.split(" ", 1)
+                validated.append(f"{bot}:GroupMessage:{group}")
+            else:
+                logger.error(f"群聊列表格式错误！错误内容【{i}】。")
+        self.group = validated
+        if not self.exclude_mode:
+            self.role_range = set(self.group)
+
     async def save_external_activated_plugins(
         self,
     ):
@@ -65,11 +77,11 @@ class AlterationNotifierPlugin(Star):
                 self.activated_plugins[cmd.name] = names
 
     async def notify(self, msg: str):
-        res = [self.ctx.send_message(
-                f'{self.UNIFIED_MSG_ORIGIN_PREFIX}{group}', MessageChain().message(msg)
-            ) for group in self.role_range]
+        res = [
+            self.ctx.send_message(group, MessageChain().message(msg))
+            for group in self.role_range
+        ]
         await asyncio.gather(*res)
-
 
     @filter.on_plugin_loaded()
     async def plugin_loaded(self, metadata: StarMetadata):
@@ -126,6 +138,5 @@ class AlterationNotifierPlugin(Star):
     async def collect_group(self, event: AstrMessageEvent):
         """自动收集群聊id"""
 
-        group_id = event.get_group_id()
-        if self.exclude_mode and group_id not in self.group:
-            self.role_range.add(group_id)
+        if self.exclude_mode and event.get_group_id() not in self.group:
+            self.role_range.add(event.unified_msg_origin)
